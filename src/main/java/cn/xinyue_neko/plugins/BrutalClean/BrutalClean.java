@@ -8,6 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 public class BrutalClean extends JavaPlugin {
 
     private int taskId = -1;
@@ -30,6 +34,7 @@ public class BrutalClean extends JavaPlugin {
         ).getTaskId();
 
         getLogger().info("BrutalCleaner 已启用，清理间隔: " + intervalSeconds + " 秒");
+        getLogger().info("已加载世界: " + describeWorlds());
     }
 
     @Override
@@ -50,8 +55,12 @@ public class BrutalClean extends JavaPlugin {
     private void cleanAllWorlds() {
         int totalRemoved = 0;
 
-        for (World world : Bukkit.getWorlds()) {
-            totalRemoved += cleanWorld(world);
+        for (World world : getTargetWorld()) {
+            int removed = cleanWorld(world);
+            if (removed > 0) {
+                getLogger().info("世界 [" + world.getName() + "] 移除了 " + removed + "个实体");
+            }
+            totalRemoved += removed;
         }
 
         if (totalRemoved > 0) {
@@ -61,6 +70,34 @@ public class BrutalClean extends JavaPlugin {
                 player.sendMessage(prefix + ChatColor.RED + msg);
             }
         }
+    }
+
+    private Collection<World> getTargetWorld() {
+        List<String> names = getConfig().getStringList("clean-worlds");
+        if (names == null || names.isEmpty()) {
+            return Bukkit.getWorlds();
+        }
+
+        List<World> result = new ArrayList<>();
+        for (String name: names) {
+            World world = Bukkit.getWorld(name);
+            if (world != null) {
+                result.add(world);
+            } else {
+                getLogger().warning("配置中的世界不存在，已跳过: " + name);
+            }
+        }
+        return result;
+    }
+
+    private String describeWorlds() {
+        StringBuilder sb = new StringBuilder();
+        for (World world: Bukkit.getWorlds()) {
+            if (sb.length() > 0) sb.append(", ");
+            sb.append(world.getName())
+                    .append("(").append(world.getEnvironment()).append(")");
+        }
+        return sb.toString();
     }
 
     /**
