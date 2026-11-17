@@ -3,3 +3,8 @@ version: 1.1.0
 main: cn.xinyue_neko.plugins.BrutalClean.BrutalClean
 api-version: 1.13
 description: DeepSeek帮我Vibe的暴力清理
+
+commands:
+  brutalclean:
+    description: 暴力清理命令, 嫌卡的时候用
+    usage: /<command>

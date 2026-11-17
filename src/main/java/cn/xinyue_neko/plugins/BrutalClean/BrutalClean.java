@@ -33,6 +33,8 @@ public class BrutalClean extends JavaPlugin {
                 intervalTicks    // 后续间隔
         ).getTaskId();
 
+        getCommand("brutalclean").setExecutor(this);
+
         getLogger().info("BrutalCleaner 已启用，清理间隔: " + intervalSeconds + " 秒");
         getLogger().info("已加载世界: " + describeWorlds());
     }
