@@ -10,4 +10,12 @@ config.yml:
 ```yaml
 # 清理时间间隔
 clean-interval-seconds: 300
+
+# 要清理的世界。留空 [] 表示清理所有已加载世界（主世界 + 下界 + 末地 + 自定义维度）
+# 也可以显式指定，例如：
+# clean-worlds:
+#   - world
+#   - world_nether
+#   - world_the_end
+clean-worlds: []
 ```
